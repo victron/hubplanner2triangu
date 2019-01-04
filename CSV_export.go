@@ -1,0 +1,94 @@
+package main
+
+import (
+	"encoding/csv"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+)
+
+type exports struct {
+	cwd      string   // current working dir
+	expDir   string   // dir with files
+	expFiles []string // list of files
+
+}
+
+func (exp *exports) initExp() error {
+	cwd, e := os.Getwd()
+	// (*exp).cwd = cwd
+	exp.cwd = cwd
+	check(e)
+	exp.expDir = expDir
+	expDirFullPath := filepath.Join((*exp).cwd, (*exp).expDir)
+	files, e := ioutil.ReadDir(expDirFullPath)
+	check(e)
+	for _, file := range files {
+		fileName := file.Name()
+		if strings.HasSuffix(fileName, ".csv") && strings.HasPrefix(fileName, "Hub_Planner_Export_") {
+			exp.expFiles = append(exp.expFiles, fileName)
+		}
+	}
+	return nil
+}
+
+// TODO: export data only related to report period
+func readCSV(fileName string, exp *exports, data *[]S_record, wg *sync.WaitGroup, mu *sync.Mutex) {
+	/* worker to read CSV file */
+
+	file, e := os.Open(fileName)
+	check(e)
+	defer file.Close()
+	defer (*wg).Done()
+
+	reader := csv.NewReader(file)
+
+	// read header
+	record, e := reader.Read()
+	check(e)
+	if len(record) != len(header) {
+		fmt.Printf("headers in file= %d, expected= %d \n", len(record), len(header))
+		return
+	}
+	for i, field := range header {
+		if record[i] != field {
+			fmt.Println("unexpected field=", record[i])
+			return
+		}
+	}
+
+	for {
+		record, e := reader.Read()
+		if e == io.EOF {
+			break
+		}
+		check(e)
+		s_record := new(S_record)
+		s_record.parse(record)
+		s_record.parseNotes()
+
+		(*mu).Lock()
+		*data = append(*data, *s_record)
+		// chRecord <- *s_record
+		(*mu).Unlock()
+	}
+}
+
+func readCSVs(exp *exports, data *[]S_record) {
+	ch_record := make(chan S_record)
+	wg := &sync.WaitGroup{}
+	mu := &sync.Mutex{}
+
+	for _, file := range (*exp).expFiles {
+		fileName := filepath.Join((*exp).cwd, (*exp).expDir, file)
+		wg.Add(1)
+		go readCSV(fileName, exp, data, wg, mu)
+	}
+
+	wg.Wait()
+	close(ch_record)
+}
