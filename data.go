@@ -185,8 +185,5 @@ func (data dataSortDate) removeOutOfReportPeriod(period time.Time) ([]S_record, 
 			newdata = append(newdata, data[i])
 		}
 	}
-	if len(newdata) == 0 {
-		return newdata, errors.New("no DATA for report period. (check '-month ...' argument)")
-	}
 	return newdata, nil
 }

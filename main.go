@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"time"
 )
@@ -14,16 +15,15 @@ const build = "2019-01-04"
 const expDir = "export"
 const fSeparator = ";"
 const sfSeparator = ":"
-const cellHeader = `{"fill":{"type":"pattern","color":["#E0EBF5"],"pattern":1}}`
-const cellTotal = `{"fill":{"type":"pattern","color":["#999999"],"pattern":1}}`    // gray
-const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1}}`  // yelow
-const cellHoliday = `{"fill":{"type":"pattern","color":["#FF9900"],"pattern":1}}`  // orange
-const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1}}` // green
-const cellNormal = `{"fill":{"type":"pattern","color":["#FFFFFF"],"pattern":1}, 	
-					"border":[{"type":"left","color":"#000000","style":1}, {"type":"right","color":"#000000","style":1},
-							  {"type":"top","color":"#000000","style":1}, {"type":"bottom","color":"#000000","style":1}]}`
 
-// TODO: set borders for weekends and holidays
+// xlsx styles
+const borderPrefix = `"border":[{"type":"left","color":"#000000","style":1}, {"type":"right","color":"#000000","style":1}, {"type":"top","color":"#000000","style":1}, {"type":"bottom","color":"#000000","style":1}]}`
+const cellHeader = `{"fill":{"type":"pattern","color":["#E0EBF5"],"pattern":1}}`
+const cellTotal = `{"fill":{"type":"pattern","color":["#999999"],"pattern":1}}`                  // gray
+const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1},` + borderPrefix //yelow
+const cellHoliday = `{"fill":{"type":"pattern","color":["#FF9900"],"pattern":1}}`                // orange
+const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1}` + borderPrefix // green
+const cellNormal = `{"fill":{"type":"pattern","color":["#FFFFFF"],"pattern":1},` + borderPrefix
 
 var header = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category", "Booked Time", "Actual Time", "Note"}
 
@@ -84,10 +84,15 @@ func main() {
 
 	exp := new(exports)
 	exp.initExp()
-	// fmt.Printf("struct=%+v \n\n\n", *exp)
 	readCSVs(exp, &data)
+
+	// sorting and removing not related to report period data
 	sort.Sort(dataSortDate(data))
 	data, err = dataSortDate(data).removeOutOfReportPeriod(reportPeriod)
+	if len(data) == 0 {
+		fmt.Println("ERROR:", "no DATA for report period. (check '-month ...' argument)")
+		os.Exit(1)
+	}
 	check(err)
 
 	corrector(&data)
@@ -99,4 +104,5 @@ func main() {
 	total.total()
 	fmt.Printf("Total= %+v \n", *total)
 	createXLSX(&data, total, options)
+	os.Exit(0)
 }
