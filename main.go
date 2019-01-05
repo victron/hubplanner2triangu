@@ -8,7 +8,7 @@ import (
 )
 
 // version
-const version = "0.1"
+const version = "0.1.1.1"
 const build = "2019-01-04"
 
 /////////// export settings //////////////
@@ -25,11 +25,13 @@ var keys_comment = []string{"C", "COMMENT", "COM"}
 // xlsx styles
 const borderPrefix = `"border":[{"type":"left","color":"#000000","style":1}, {"type":"right","color":"#000000","style":1}, {"type":"top","color":"#000000","style":1}, {"type":"bottom","color":"#000000","style":1}]}`
 const cellHeader = `{"fill":{"type":"pattern","color":["#E0EBF5"],"pattern":1}}`
-const cellTotal = `{"fill":{"type":"pattern","color":["#999999"],"pattern":1}}`                   // gray
-const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1},` + borderPrefix  //yelow
-const cellHoliday = `{"fill":{"type":"pattern","color":["#FF9900"],"pattern":1}}`                 // orange
-const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1},` + borderPrefix // green
-const cellNormal = `{"fill":{"type":"pattern","color":["#FFFFFF"],"pattern":1},` + borderPrefix
+const cellTotal = `{"fill":{"type":"pattern","color":["#999999"],"pattern":1}}` // gray
+// const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1},` + borderPrefix  //yelow
+const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1}}` //yelow
+const cellHoliday = `{"fill":{"type":"pattern","color":["#FF9900"],"pattern":1}}` // orange
+// const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1},` + borderPrefix // green
+const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1}}` // green
+const cellNormal = `{"fill":{"type":"pattern","pattern":1}}`
 
 var headerSheet = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category",
 	"Actual Time", "Note", "Normal hours: rate 1.0", "Overtime hours: rate 1.5", "Night work hours: rate 2.0"}
