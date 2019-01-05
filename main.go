@@ -16,6 +16,12 @@ const expDir = "export"
 const fSeparator = ";"
 const sfSeparator = ":"
 
+var header = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category", "Booked Time", "Actual Time", "Note"}
+var keysOT10 = []string{"OT10", "OT1_0", "OT0"}
+var keysOT15 = []string{"OT15", "OT1_5", "OT1.5", "OT1"}
+var keysOT20 = []string{"OT20", "OT2_0", "OT2.0", "OT2"}
+var keys_comment = []string{"C", "COMMENT", "COM"}
+
 // xlsx styles
 const borderPrefix = `"border":[{"type":"left","color":"#000000","style":1}, {"type":"right","color":"#000000","style":1}, {"type":"top","color":"#000000","style":1}, {"type":"bottom","color":"#000000","style":1}]}`
 const cellHeader = `{"fill":{"type":"pattern","color":["#E0EBF5"],"pattern":1}}`
@@ -24,14 +30,6 @@ const cellWeekend = `{"fill":{"type":"pattern","color":["#FFFF00"],"pattern":1},
 const cellHoliday = `{"fill":{"type":"pattern","color":["#FF9900"],"pattern":1}}`                // orange
 const cellVacation = `{"fill":{"type":"pattern","color":["#CCFF33"],"pattern":1}` + borderPrefix // green
 const cellNormal = `{"fill":{"type":"pattern","color":["#FFFFFF"],"pattern":1},` + borderPrefix
-
-var header = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category", "Booked Time", "Actual Time", "Note"}
-
-// var header = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category", "Booked Time", "Actual Time", "Note"}
-var keysOT10 = []string{"OT10", "OT1_0", "OT0"}
-var keysOT15 = []string{"OT15", "OT1_5", "OT1.5", "OT1"}
-var keysOT20 = []string{"OT20", "OT2_0", "OT2.0", "OT2"}
-var keys_comment = []string{"C", "COMMENT", "COM"}
 
 var headerSheet = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category",
 	"Actual Time", "Note", "Normal hours: rate 1.0", "Overtime hours: rate 1.5", "Night work hours: rate 2.0"}
