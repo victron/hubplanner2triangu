@@ -177,13 +177,3 @@ func checker(data *[]S_record, reportPeriod time.Time) error {
 	}
 	return nil
 }
-
-func (data dataSortDate) removeOutOfReportPeriod(period time.Time) ([]S_record, error) {
-	var newdata dataSortDate
-	for i, _ := range data {
-		if data[i].Date.Year() == period.Year() && data[i].Date.Month() == period.Month() {
-			newdata = append(newdata, data[i])
-		}
-	}
-	return newdata, nil
-}

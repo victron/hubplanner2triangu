@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/csv"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -36,8 +37,7 @@ func (exp *exports) initExp() error {
 	return nil
 }
 
-// TODO: export data only related to report period
-func readCSV(fileName string, exp *exports, data *[]S_record, wg *sync.WaitGroup, mu *sync.Mutex) {
+func readCSV(fileName string, exp *exports, data *[]S_record, wg *sync.WaitGroup, mu *sync.Mutex, options options) {
 	/* worker to read CSV file */
 
 	file, e := os.Open(fileName)
@@ -68,7 +68,11 @@ func readCSV(fileName string, exp *exports, data *[]S_record, wg *sync.WaitGroup
 		}
 		check(e)
 		s_record := new(S_record)
-		s_record.parse(record)
+		e = s_record.parse(record, options)
+		if e != nil {
+			// don't append to data, parse another record
+			continue
+		}
 		s_record.parseNotes()
 
 		(*mu).Lock()
@@ -78,7 +82,7 @@ func readCSV(fileName string, exp *exports, data *[]S_record, wg *sync.WaitGroup
 	}
 }
 
-func readCSVs(exp *exports, data *[]S_record) {
+func readCSVs(exp *exports, data *[]S_record, options options) (int, error) {
 	ch_record := make(chan S_record)
 	wg := &sync.WaitGroup{}
 	mu := &sync.Mutex{}
@@ -86,9 +90,16 @@ func readCSVs(exp *exports, data *[]S_record) {
 	for _, file := range (*exp).expFiles {
 		fileName := filepath.Join((*exp).cwd, (*exp).expDir, file)
 		wg.Add(1)
-		go readCSV(fileName, exp, data, wg, mu)
+		go readCSV(fileName, exp, data, wg, mu, options)
 	}
 
 	wg.Wait()
 	close(ch_record)
+
+	numRecords := len(*data)
+
+	if numRecords == 0 {
+		return numRecords, errors.New("parsed num. of record == 0")
+	}
+	return numRecords, nil
 }

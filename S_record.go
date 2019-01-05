@@ -24,12 +24,15 @@ type S_record struct {
 	cellStyle      string
 }
 
-func (S_record *S_record) parse(record []string) {
+func (S_record *S_record) parse(record []string, options options) error {
 	/* parse record
 	set default "cellStyle" for normal and weekend days
 	*/
 	dateTime, e := time.Parse("2006-01-02", record[0])
 	check(e)
+	if dateTime.Month() != options.reportPeriod.Month() {
+		return errors.New("INFO: Date is out of report period, don't need to parse")
+	}
 	(*S_record).Date = dateTime
 	(*S_record).Resource_Name = record[1]
 	(*S_record).Project_Name = record[2]
@@ -58,7 +61,7 @@ func (S_record *S_record) parse(record []string) {
 	// } else {
 	// 	(*S_record).cellStyle = cellNormal
 	// }
-
+	return nil
 }
 
 func (S_record *S_record) parseNotes() {
