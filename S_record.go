@@ -30,7 +30,7 @@ func (S_record *S_record) parse(record []string, options options) error {
 	*/
 	dateTime, e := time.Parse("2006-01-02", record[0])
 	check(e)
-	if dateTime.Month() != options.reportPeriod.Month() {
+	if dateTime.Month() != options.reportPeriod.Month() || dateTime.Year() != options.reportPeriod.Year() {
 		return errors.New("INFO: Date is out of report period, don't need to parse")
 	}
 	(*S_record).Date = dateTime
