@@ -8,8 +8,8 @@ import (
 )
 
 // version
-const version = "0.1.1.1"
-const build = "2019-01-05"
+const version = "0.2.0.0"
+const build = "2019-01-19"
 
 /////////// export settings //////////////
 const expDir = "export"
@@ -42,22 +42,6 @@ func check(e error) {
 	}
 }
 
-type Total struct {
-	Actual_Time float32
-	OT10        float32
-	OT15        float32
-	OT20        float32
-}
-
-func (total *Total) total() {
-	for _, s_record := range data {
-		(*total).OT10 = (*total).OT10 + s_record.OT10
-		(*total).OT15 = (*total).OT15 + s_record.OT15
-		(*total).OT20 = (*total).OT20 + s_record.OT20
-		(*total).Actual_Time = (*total).Actual_Time + s_record.Actual_Time
-	}
-}
-
 func simpleJoin(strs ...string) string {
 	var result string
 	for _, str := range strs {
@@ -68,6 +52,8 @@ func simpleJoin(strs ...string) string {
 
 type options struct {
 	reportPeriod time.Time
+	monthRate    float64
+	usduah       float64
 }
 
 type paramSource interface {
@@ -103,7 +89,15 @@ func main() {
 	check(err)
 	total := new(Total)
 	total.total()
-	fmt.Printf("Total= %+v \n", *total)
 	createXLSX(&data, total, options)
-	os.Exit(0)
+
+	if options.usduah != 0 && options.monthRate != 0 {
+		monthI := monthInfoConstruct(reportPeriod)
+		oneHourCost := monthI.oneHourCost(options.monthRate)
+		fmt.Println("oneHourCost", oneHourCost)
+		total.calcValues(oneHourCost, options.usduah)
+	}
+
+	fmt.Printf("Total= %+v \n", *total)
+	// os.Exit(0)
 }

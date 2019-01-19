@@ -20,6 +20,10 @@ func (input *cliArgs) readParams(options *options) error {
 		fmt.Println("ver.:", version, "build:", build)
 		os.Exit(0)
 	}
+	// values for rate calculation
+	(*options).monthRate = *monthRate
+	(*options).usduah = *usduah
+
 	// monthStr - global pointer
 	yearMonth := strings.Split(*monthStr, "-")
 	if len(yearMonth) == 1 {

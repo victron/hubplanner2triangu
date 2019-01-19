@@ -14,12 +14,12 @@ type S_record struct {
 	Project_Name   string
 	Project_Status string
 	Category       string
-	Booked_Time    float32
-	Actual_Time    float32
+	Booked_Time    float64
+	Actual_Time    float64
 	Note           string
-	OT10           float32
-	OT15           float32
-	OT20           float32
+	OT10           float64
+	OT15           float64
+	OT20           float64
 	comment        string
 	cellStyle      string
 }
@@ -38,11 +38,11 @@ func (S_record *S_record) parse(record []string, options options) error {
 	(*S_record).Project_Name = record[2]
 	(*S_record).Project_Status = record[3]
 	(*S_record).Category = record[4]
-	value, err := strconv.ParseFloat(record[5], 32)
+	value, err := strconv.ParseFloat(record[5], 64)
 	check(err)
-	(*S_record).Booked_Time = float32(value)
-	value, err = strconv.ParseFloat(record[6], 32)
-	(*S_record).Actual_Time = float32(value)
+	(*S_record).Booked_Time = value
+	value, err = strconv.ParseFloat(record[6], 64)
+	(*S_record).Actual_Time = value
 	(*S_record).Note = record[7]
 
 	// default values (part of constructor)
@@ -88,17 +88,17 @@ func (S_record *S_record) parseNotes() {
 
 		switch true {
 		case testKey(key, keysOT10):
-			value, e := strconv.ParseFloat(val, 32)
+			value, e := strconv.ParseFloat(val, 64)
 			check(e)
-			(*S_record).OT10 = float32(value)
+			(*S_record).OT10 = value
 		case testKey(key, keysOT15):
-			value, e := strconv.ParseFloat(val, 32)
+			value, e := strconv.ParseFloat(val, 64)
 			check(e)
-			(*S_record).OT15 = float32(value)
+			(*S_record).OT15 = value
 		case testKey(key, keysOT20):
-			value, e := strconv.ParseFloat(val, 32)
+			value, e := strconv.ParseFloat(val, 64)
 			check(e)
-			(*S_record).OT20 = float32(value)
+			(*S_record).OT20 = value
 		case testKey(key, keys_comment):
 			(*S_record).comment = strings.TrimSpace(val)
 		}
