@@ -11,7 +11,12 @@ Usage:
 
 ### Options:
 
-`-month` - for what period prepare report. Possible formats `2018-12`, `12`.
+`-month` - for what period prepare report.
+Possible formats `2018-12`, `12`.
+
+- if below options provided calculating total money values:  
+`-mrate` - monthly negotiated rate in USD  
+`-usd` - USDUAH exchange rate at day of payment   
 
 ### Testing Notes
 
@@ -19,6 +24,7 @@ Usage:
 
 cli to run for current test data  
 `go test -args -month 2018-12`  
+`go test -args -month 2018-12 -mrate 1000 -usd 27.9`  
 
 ### Builds:
 
