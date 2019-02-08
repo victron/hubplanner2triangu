@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+// TODO: add logic to ignore comments if hours is 0
+
 var data []S_record
 
 ///////////////// sort by time ////////////////
@@ -156,7 +158,7 @@ func checker(data *[]S_record, reportPeriod time.Time) error {
 	firstOfMonth := reportPeriod
 	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
 	if len(*data) != lastOfMonth.Day() {
-		return errors.New("number of records not eq to number of days in month")
+		return errors.New("number of reported records not eq to number of days in month")
 	}
 	for i, _ := range *data {
 		e := (*data)[i].checker()

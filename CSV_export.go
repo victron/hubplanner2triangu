@@ -28,6 +28,7 @@ func (exp *exports) initExp() error {
 	expDirFullPath := filepath.Join((*exp).cwd, (*exp).expDir)
 	files, e := ioutil.ReadDir(expDirFullPath)
 	check(e)
+	// TODO: it's better to move serch file logic into function of package
 	for _, file := range files {
 		fileName := file.Name()
 		if strings.HasSuffix(fileName, ".csv") && strings.HasPrefix(fileName, "Hub_Planner_Export_") {

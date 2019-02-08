@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"hubplanner2triangu/pkg/updf"
 	"os"
 	"sort"
 	"time"
@@ -70,6 +71,15 @@ func main() {
 
 	exp := new(exports)
 	exp.initExp()
+
+	ureports := updf.NewData(reportPeriod, (*exp).cwd, (*exp).expDir)
+	_, err = ReadPdfs(ureports)
+	check(err)
+	ureports.PrepareReport()
+	if *taxionly {
+		return
+	}
+
 	numRecords, err := readCSVs(exp, &data, options)
 	if err != nil {
 		if numRecords == 0 {
@@ -86,7 +96,12 @@ func main() {
 	data, err := removeDuplicates(data, sameDateFinder(&data))
 	check(err)
 	err = checker(&data, reportPeriod)
-	check(err)
+	if err != nil {
+		if err.Error() == "number of reported records not eq to number of days in month" {
+			fmt.Println("ERROR:", err.Error())
+			return
+		}
+	}
 	total := new(Total)
 	total.total()
 	createXLSX(&data, total, options)

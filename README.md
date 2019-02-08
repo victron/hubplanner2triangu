@@ -25,7 +25,12 @@ Possible formats `2018-12`, `12`.
 cli to run for current test data  
 `go test -args -month 2018-12`  
 `go test -args -month 2018-12 -mrate 1000 -usd 27.9`  
+`go test -args -month 2019-01`  
 
 ### Builds:
 
 in releases tab.
+
+
+### Notes
+[Why Go Interfaces are Awesome](https://blog.teamtreehouse.com/go-interfaces-awesome)  

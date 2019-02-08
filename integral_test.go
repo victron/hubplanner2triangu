@@ -10,6 +10,8 @@ import (
 	"github.com/xuri/excelize"
 )
 
+// TODO: clean created files after test
+
 const testData = "testData"
 const etalonFile = "Etalon.xlsx"
 const etalonSheet = "Sheet1"
