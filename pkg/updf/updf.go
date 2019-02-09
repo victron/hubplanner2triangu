@@ -15,6 +15,7 @@ import (
 	"github.com/victron/pdf"
 )
 
+const tax_rate = 5.0
 const UAH = '₴'
 
 type UberReport struct {
@@ -131,8 +132,9 @@ func (ur *UReports) PrepareReport() (int, error) {
 		total += report.total
 		docsNum++
 	}
+	totalAndTax := total * 100 / (100 - tax_rate)
 	fmt.Println("--------")
-	fmt.Printf("TOTAL: \t\t %.2f UAH\n", total)
+	fmt.Printf("TOTAL: \t\t %.2f + TAX = %.2f UAH\n", total, totalAndTax)
 
 	return docsNum, nil
 }
