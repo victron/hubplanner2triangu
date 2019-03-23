@@ -109,6 +109,7 @@ func main() {
 
 	if options.usduah != 0 && options.monthRate != 0 {
 		monthI := monthInfoConstruct(reportPeriod)
+		monthI.fillHolidays(data)
 		oneHourCost := monthI.oneHourCost(options.monthRate)
 		fmt.Println("oneHourCost", oneHourCost)
 		total.calcValues(oneHourCost, options.usduah)

@@ -117,12 +117,22 @@ func (S_record *S_record) correctOT10() error {
 			}
 		}
 	}
+	// correct OT10 based on va0 and ho flags
+	if (*S_record).cellStyle == cellVacation && *vacation0 {
+		(*S_record).OT10 = 0
+	}
+	if (*S_record).cellStyle == cellHoliday && *holiday0 {
+		(*S_record).OT10 = 0
+	}
 	return nil
 }
 
 func (S_record *S_record) checker() error {
 	switch false {
 	case (*S_record).Actual_Time == (*S_record).OT10+(*S_record).OT15+(*S_record).OT20:
+		if (*S_record).cellStyle == cellVacation || (*S_record).cellStyle == cellHoliday {
+			return nil
+		}
 		fmt.Printf("ERROR: checker: date=%v Actual_Time= %f, OT10= %f, OT15= %f, OT20= %f \n",
 			(*S_record).Date, (*S_record).Actual_Time, (*S_record).OT10, (*S_record).OT15, (*S_record).OT20)
 		fmt.Printf("record= %+v \n", S_record)

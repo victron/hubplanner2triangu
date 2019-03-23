@@ -23,7 +23,7 @@ func TestAll(t *testing.T) {
 	check(err)
 	testDir := path.Join(cwd, testData)
 	etalonFileName := path.Join(testDir, etalonFile)
-	reportFileName := path.Join(testDir, reportFile)
+	reportFileName := path.Join(testDir, "2018-12", reportFile)
 	err = os.Chdir(path.Join(cwd, testData))
 	check(err)
 	cwd, err = os.Getwd()

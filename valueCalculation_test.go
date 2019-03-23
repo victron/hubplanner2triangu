@@ -33,17 +33,17 @@ var testsTableMonthInfo = []testmonthInfoConstruct{
 var testTableTotalCalc = []testTotalCalc{
 	{
 		5.9, 27.8,
-		Total{Actual_Time: 15, OT10: 17, OT15: 8, OT20: 5, OT10val: 0, OT15val: 0, OT20val: 0,
-			OT10valUAH: 0, OT15valUAH: 0, OT20valUAH: 0, TotalUAH: 0},
-		Total{Actual_Time: 15, OT10: 17, OT15: 8, OT20: 5, OT10val: 100.3, OT15val: 70.8, OT20val: 59,
-			OT10valUAH: 2788.34, OT15valUAH: 1968.24, OT20valUAH: 1640.2, TotalUAH: 6396.78},
+		Total{Actual_Time: 15, OT10: 17, OT15: 8, OT20: 5, OT10USD: 0, OT15USD: 0, OT20USD: 0,
+			OT10UAH: 0, OT15UAH: 0, OT20UAH: 0, TotalUSD: 0, TotalUAH: 0},
+		Total{Actual_Time: 15, OT10: 17, OT15: 8, OT20: 5, OT10USD: 100.3, OT15USD: 70.8, OT20USD: 59,
+			OT10UAH: 2788.34, OT15UAH: 1968.24, OT20UAH: 1640.2, TotalUSD: 230.1, TotalUAH: 6396.78},
 	},
 	{
 		5.32, 27.34,
-		Total{Actual_Time: 180, OT10: 160, OT15: 26, OT20: 14, OT10val: 0, OT15val: 0, OT20val: 0,
-			OT10valUAH: 0, OT15valUAH: 0, OT20valUAH: 0, TotalUAH: 0},
-		Total{Actual_Time: 180, OT10: 160, OT15: 26, OT20: 14, OT10val: 851.2, OT15val: 207.48, OT20val: 148.96,
-			OT10valUAH: 23271.81, OT15valUAH: 5672.50, OT20valUAH: 4072.57, TotalUAH: 33016.88},
+		Total{Actual_Time: 180, OT10: 160, OT15: 26, OT20: 14, OT10USD: 0, OT15USD: 0, OT20USD: 0,
+			OT10UAH: 0, OT15UAH: 0, OT20UAH: 0, TotalUSD: 0, TotalUAH: 0},
+		Total{Actual_Time: 180, OT10: 160, OT15: 26, OT20: 14, OT10USD: 851.2, OT15USD: 207.48, OT20USD: 148.96,
+			OT10UAH: 23271.81, OT15UAH: 5672.50, OT20UAH: 4072.57, TotalUSD: 1207.64, TotalUAH: 33016.88},
 	},
 }
 
@@ -64,7 +64,7 @@ func TestCalcValues(t *testing.T) {
 		total.calcValues(pair.hourCost, pair.usduah)
 		if !reflect.DeepEqual(pair.exp_total, *total) {
 			t.Fatal("Result for:", pair.input_total,
-				"\nGot:", *total,
+				"\nGot     :", *total,
 				"\nExpected:", pair.exp_total)
 		}
 	}

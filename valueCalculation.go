@@ -13,19 +13,22 @@ type monthInfo struct {
 	weHours float64
 	hoDays  int // public holiday
 	hoHours float64
+	vaDays  int // vacation
+	vaHours float64
 }
 
 type Total struct {
 	Actual_Time float64
-	OT10        float64 // including vacation
+	OT10        float64
 	OT15        float64
 	OT20        float64
-	OT10val     float64 // including vacation
-	OT15val     float64
-	OT20val     float64
-	OT10valUAH  float64 // including vacation
-	OT15valUAH  float64
-	OT20valUAH  float64
+	OT10USD     float64
+	OT15USD     float64
+	OT20USD     float64
+	OT10UAH     float64
+	OT15UAH     float64
+	OT20UAH     float64
+	TotalUSD    float64
 	TotalUAH    float64
 }
 
@@ -38,6 +41,8 @@ func (total *Total) total() {
 	}
 }
 
+// construct monthInfo structure,
+// filling only working and weekend days
 func monthInfoConstruct(reportPeriod time.Time) monthInfo {
 	var monthInfo monthInfo
 	firstOfMonth := reportPeriod
@@ -58,27 +63,55 @@ func monthInfoConstruct(reportPeriod time.Time) monthInfo {
 	return monthInfo
 }
 
+func (monthInfo *monthInfo) fillHolidays(data []S_record) {
+	for _, s_record := range data {
+		switch {
+		case s_record.cellStyle == cellVacation:
+			(*monthInfo).woDays -= 1
+			(*monthInfo).woHours -= 8
+			(*monthInfo).vaDays += 1
+			(*monthInfo).vaHours += 8
+
+		case s_record.cellStyle == cellHoliday:
+			(*monthInfo).woDays -= 1
+			(*monthInfo).woHours -= 8
+			(*monthInfo).hoDays += 1
+			(*monthInfo).hoHours += 8
+
+		}
+	}
+}
+
+// calculate one hour cost, based on va0 and ho flags
 func (monthInfo monthInfo) oneHourCost(monthRate float64) float64 {
-	// return: one OT10 working hour cost (can be any currency)
-	return monthRate / monthInfo.woHours
+	var normHoursInMonth = monthInfo.woHours
+	if !*vacation0 {
+		normHoursInMonth += monthInfo.vaHours
+	}
+	if !*holiday0 {
+		normHoursInMonth += monthInfo.hoHours
+	}
+	return math.Round(monthRate/normHoursInMonth*100) / 100
 }
 
 func (total *Total) calcValues(hourCost, usduah float64) {
-	(*total).OT10val = (*total).OT10 * hourCost
-	(*total).OT10val = math.Round((*total).OT10val*100) / 100
-	(*total).OT15val = (*total).OT15 * hourCost * 1.5
-	(*total).OT15val = math.Round((*total).OT15val*100) / 100
-	(*total).OT20val = (*total).OT20 * hourCost * 2
-	(*total).OT20val = math.Round((*total).OT20val*100) / 100
+	(*total).OT10USD = (*total).OT10 * hourCost
+	(*total).OT10USD = math.Round((*total).OT10USD*100) / 100
+	(*total).OT15USD = (*total).OT15 * hourCost * 1.5
+	(*total).OT15USD = math.Round((*total).OT15USD*100) / 100
+	(*total).OT20USD = (*total).OT20 * hourCost * 2
+	(*total).OT20USD = math.Round((*total).OT20USD*100) / 100
 
-	(*total).OT10valUAH = (*total).OT10val * usduah
-	(*total).OT10valUAH = math.Round((*total).OT10valUAH*100) / 100
-	(*total).OT15valUAH = (*total).OT15val * usduah
-	(*total).OT15valUAH = math.Round((*total).OT15valUAH*100) / 100
-	(*total).OT20valUAH = (*total).OT20val * usduah
-	(*total).OT20valUAH = math.Round((*total).OT20valUAH*100) / 100
+	(*total).OT10UAH = (*total).OT10USD * usduah
+	(*total).OT10UAH = math.Round((*total).OT10UAH*100) / 100
+	(*total).OT15UAH = (*total).OT15USD * usduah
+	(*total).OT15UAH = math.Round((*total).OT15UAH*100) / 100
+	(*total).OT20UAH = (*total).OT20USD * usduah
+	(*total).OT20UAH = math.Round((*total).OT20UAH*100) / 100
 
-	(*total).TotalUAH = (*total).OT10valUAH + (*total).OT15valUAH + (*total).OT20valUAH
+	(*total).TotalUSD = (*total).OT10USD + (*total).OT15USD + (*total).OT20USD
+	(*total).TotalUSD = math.Round((*total).TotalUSD*100) / 100
+	(*total).TotalUAH = (*total).TotalUSD * usduah
 	(*total).TotalUAH = math.Round((*total).TotalUAH*100) / 100
 
 }
