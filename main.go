@@ -9,8 +9,8 @@ import (
 )
 
 // version
-const version = "0.2.0.0"
-const build = "2019-01-19"
+const version = "0.3.1.0"
+const build = "2019-03-23"
 
 /////////// export settings //////////////
 const fSeparator = ";"
@@ -76,7 +76,7 @@ func main() {
 	ureports := updf.NewData(reportPeriod, (*exp).cwd, (*exp).expDir)
 	_, err = ReadPdfs(ureports)
 	check(err)
-	ureports.PrepareReport()
+	ureports.PrepareReport(" night jobs ")
 	if *taxionly {
 		return
 	}

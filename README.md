@@ -19,11 +19,6 @@ Possible formats `2018-12`, `12`.
 `-usd` - USDUAH exchange rate at day of payment   
 
 ### TODO:
-- subject for taxi in cli output. to easy copy in jira subj.
-- sort output list by date
-+ flag taxi only
-+ flag dir for exports
-+ put result in report dir
 - clean files after tests
 
 ### Testing Notes

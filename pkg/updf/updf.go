@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -32,6 +33,10 @@ type UReports struct {
 	cwd    string // curent working dir
 	dir    string
 }
+
+func (ur *UReports) Len() int           { return len((*ur).data) }
+func (ur *UReports) Swap(i, j int)      { (*ur).data[i], (*ur).data[j] = (*ur).data[j], (*ur).data[i] }
+func (ur *UReports) Less(i, j int) bool { return (*ur).data[i].date.Before((*ur).data[j].date) }
 
 func NewData(period time.Time, cwd, dir string) *UReports {
 	return &UReports{period: period, cwd: cwd, dir: dir, data: nil}
@@ -119,13 +124,14 @@ func (ur *UReports) ReadPDFs() (int, error) {
 	return numRecords, nil
 }
 
-func (ur *UReports) PrepareReport() (int, error) {
+func (ur *UReports) PrepareReport(shortComment string) (int, error) {
 	if len((*ur).data) == 0 {
 		return 0, nil
 	}
+	sort.Sort(ur)
 	total := 0.0
 	docsNum := 0
-	fmt.Println("TAXI:")
+	fmt.Println("TAXI in " + (*ur).period.Format("2006-01") + shortComment + ":")
 	for i, report := range (*ur).data {
 		// TODO: change currency (if need later)
 		fmt.Printf("%d %s \t %.2f UAH\n", i+1, report.date.Format("2006-01-02"), report.total)
