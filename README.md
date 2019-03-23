@@ -18,6 +18,14 @@ Possible formats `2018-12`, `12`.
 `-mrate` - monthly negotiated rate in USD  
 `-usd` - USDUAH exchange rate at day of payment   
 
+### TODO:
+- subject for taxi in cli output. to easy copy in jira subj.
+- sort output list by date
++ flag taxi only
++ flag dir for exports
++ put result in report dir
+- clean files after tests
+
 ### Testing Notes
 
 #### Integrational test
@@ -25,7 +33,7 @@ Possible formats `2018-12`, `12`.
 cli to run for current test data  
 `go test -args -month 2018-12`  
 `go test -args -month 2018-12 -mrate 1000 -usd 27.9`  
-`go test -args -month 2019-01`  
+`go test -args -month 2019-01 -taxi`  
 
 ### Builds:
 
@@ -34,3 +42,5 @@ in releases tab.
 
 ### Notes
 [Why Go Interfaces are Awesome](https://blog.teamtreehouse.com/go-interfaces-awesome)  
+
+

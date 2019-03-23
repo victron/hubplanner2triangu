@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 	"strconv"
 
 	"github.com/360EntSecGroup-Skylar/excelize"
@@ -78,8 +79,9 @@ func createXLSX(data *[]S_record, total *Total, options options) {
 	}
 	xlsx.SetCellStyle(sheetName, simpleJoin("A", strconv.Itoa(currentRow)), simpleJoin("J", strconv.Itoa(currentRow)), headerStyle)
 
-	fileName := sheetName + "_" + options.reportPeriod.Format("2006-01") + ".xlsx"
-	err = xlsx.SaveAs(fileName)
+	reportDir := options.reportPeriod.Format("2006-01")
+	fileName := sheetName + "_" + reportDir + ".xlsx"
+	err = xlsx.SaveAs(filepath.Join(reportDir, fileName))
 	if err != nil {
 		fmt.Println(err)
 	}

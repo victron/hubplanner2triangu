@@ -24,10 +24,13 @@ func (exp *exports) initExp() error {
 	// (*exp).cwd = cwd
 	exp.cwd = cwd
 	check(e)
-	exp.expDir = expDir
+	exp.expDir = *monthStr
 	expDirFullPath := filepath.Join((*exp).cwd, (*exp).expDir)
 	files, e := ioutil.ReadDir(expDirFullPath)
-	check(e)
+	if e != nil {
+		fmt.Println("problem with opening DIR:", expDirFullPath)
+		os.Exit(1)
+	}
 	// TODO: it's better to move serch file logic into function of package
 	for _, file := range files {
 		fileName := file.Name()

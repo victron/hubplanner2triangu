@@ -13,9 +13,10 @@ const version = "0.2.0.0"
 const build = "2019-01-19"
 
 /////////// export settings //////////////
-const expDir = "export"
 const fSeparator = ";"
 const sfSeparator = ":"
+
+// var expDir string = *monthStr
 
 var header = [...]string{"Date", "Resource Name", "Project Name", "Project Status", "Category", "Booked Time", "Actual Time", "Note"}
 var keysOT10 = []string{"OT10", "OT1_0", "OT0"}
